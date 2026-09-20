@@ -27,11 +27,13 @@ export async function obtainWithholdings(context: BrowserContext, page: Page): P
 
     if (await row.count() === 0) {
         console.log(`No existe el período ${periodo}`);
+        await sifereInquiriesPage.close();
         return null;
     }
 
     if (await row.locator('img[title="Ver Retenciones y Coeficientes"]').count() === 0) {
         console.log(`No existe el detalle para ${periodo}`);
+        await sifereInquiriesPage.close();
         return null;
     }
 
@@ -46,6 +48,8 @@ export async function obtainWithholdings(context: BrowserContext, page: Page): P
     const download = await downloadPromise;
 
     const pdfPath = await download.path();
+
+    await sifereInquiriesPage.close();
 
     return pdfPath;
 }

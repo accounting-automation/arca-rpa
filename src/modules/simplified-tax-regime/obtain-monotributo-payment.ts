@@ -17,7 +17,7 @@ export async function obtainMonotributoPayment(context: BrowserContext, page: Pa
   // Abrir el tile de DDJJ y Pagos ya deja la sesión de seti.afip.gob.ar
   // seteada (misma app que "Consulta de DDJJ presentadas"), así que no hace
   // falta clickear "Consulta de VEP" ni "Aplicar": vamos directo a la API.
-  await goToPageDdjjAndPayments(context, page);
+  const ddjjPage = await goToPageDdjjAndPayments(context, page);
 
   const cuit = (await page.locator('#usernav .numeroCuit').innerText())
     .trim()
@@ -48,6 +48,7 @@ export async function obtainMonotributoPayment(context: BrowserContext, page: Pa
 
   if (!vep) {
     console.log(`No se encontró un pago de monotributo para ${descripcionBuscada}`);
+    await ddjjPage.close();
     return null;
   }
 
@@ -63,6 +64,8 @@ export async function obtainMonotributoPayment(context: BrowserContext, page: Pa
   const pdfPath = join(tmpdir(), `pago-monotributo-${vep.nroVep}.pdf`);
 
   await writeFile(pdfPath, buffer);
+
+  await ddjjPage.close();
 
   return pdfPath;
 }

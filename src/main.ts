@@ -1,17 +1,17 @@
 import { chromium } from 'playwright';
 import 'dotenv/config';
-import { activarLogEnCarpeta } from './console-logger.js';
-import { login } from './login.js';
-import { retrieveSentItems } from './retrieve-sent-items.js';
-import { printPdf } from './print-pdf.js';
-import { retrieveReceivedItems } from './retrieve-received-items.js';
-import { obtainWithholdings } from './obtain-withholdings.js';
-import { obtainAcknowledgmentOfReceipt } from './obtain-acknowledgment-of-receipt.js';
-import { obtainMonotributoPayment } from './obtain-monotributo-payment.js';
-import { obtainCmSopPayment } from './obtain-cm-sop-payment.js';
-import { obtainSwornStatement } from './obtain-sworn-statement.js';
-import { goToPageMyServices } from './go-to-page-my-services.js';
-import { goToPageARCA } from './go-to-page-arca.js';
+import { activarLogEnCarpeta } from './instrument/console-logger.js';
+import { login } from './common/login/login.js';
+import { goToPageARCA } from './common/login/go-to-page-arca.js';
+import { goToPageMyServices } from './common/mis-services/go-to-page-my-services.js';
+import { printPdf } from './common/print/print-pdf.js';
+import { retrieveSentItems } from './modules/issued-receipts/retrieve-sent-items.js';
+import { retrieveReceivedItems } from './modules/vouchers-received/retrieve-received-items.js';
+import { obtainWithholdings } from './modules/withholdings/obtain-withholdings.js';
+import { obtainAcknowledgmentOfReceipt } from './modules/acknowledgment-of-receipt/obtain-acknowledgment-of-receipt.js';
+import { obtainMonotributoPayment } from './modules/simplified-tax-regime/obtain-monotributo-payment.js';
+import { obtainCmSopPayment } from './modules/multilateral-agreement/obtain-cm-sop-payment.js';
+import { obtainSwornStatement } from './modules/sworn-declaration/obtain-sworn-statement.js';
 
 const ARCA_USERNAME = process.env.ARCA_USERNAME;
 const ARCA_PASSWORD = process.env.ARCA_PASSWORD;
@@ -29,7 +29,7 @@ async function main(username: string, password: string) {
 
   const browser = await chromium.launch({
     headless: false,
-    slowMo: 500,
+    slowMo: 100,
   });
 
   const context = await browser.newContext();
@@ -121,7 +121,7 @@ async function main(username: string, password: string) {
     console.log('No se encontró la declaración jurada');
   }
 
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(1000);
 
   await browser.close();
 

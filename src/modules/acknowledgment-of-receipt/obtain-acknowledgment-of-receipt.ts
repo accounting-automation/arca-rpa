@@ -18,7 +18,7 @@ export async function obtainAcknowledgmentOfReceipt(context: BrowserContext, pag
   // (mismo patrón que con SIFERE), así que después de esto no hace falta
   // clickear "Presentaciones" ni "Consulta de DDJJ presentadas": pedimos la
   // lista y el PDF directo por la API.
-  await goToPageDdjjAndPayments(context, page);
+  const ddjjPage = await goToPageDdjjAndPayments(context, page);
 
   const cuit = (await page.locator('#usernav .numeroCuit').innerText())
     .trim()
@@ -51,6 +51,7 @@ export async function obtainAcknowledgmentOfReceipt(context: BrowserContext, pag
 
   if (!presentacion) {
     console.log(`No se encontró una presentación para el período ${periodoBuscado}`);
+    await ddjjPage.close();
     return null;
   }
 
@@ -68,6 +69,8 @@ export async function obtainAcknowledgmentOfReceipt(context: BrowserContext, pag
   const pdfPath = join(tmpdir(), `acuse-de-recibo-${presentacion.transaccion}.pdf`);
 
   await writeFile(pdfPath, buffer);
+
+  await ddjjPage.close();
 
   return pdfPath;
 }

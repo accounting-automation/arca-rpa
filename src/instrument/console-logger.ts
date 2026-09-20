@@ -1,6 +1,6 @@
 import { appendFile, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { getCarpetaDestino } from './carpeta-destino.js';
+import { getCarpetaDestino } from '../common/print/carpeta-destino.js';
 
 const bufferLineas: string[] = [];
 let archivoLog: string | null = null;

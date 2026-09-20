@@ -16,7 +16,7 @@ interface Vep {
 export async function obtainCmSopPayment(context: BrowserContext, page: Page): Promise<string | null> {
   // Abrir el tile de DDJJ y Pagos ya deja la sesión de seti.afip.gob.ar
   // seteada, así que vamos directo a la API igual que con el monotributo.
-  await goToPageDdjjAndPayments(context, page);
+  const ddjjPage = await goToPageDdjjAndPayments(context, page);
 
   const cuit = (await page.locator('#usernav .numeroCuit').innerText())
     .trim()
@@ -49,6 +49,7 @@ export async function obtainCmSopPayment(context: BrowserContext, page: Page): P
 
   if (!vep) {
     console.log(`No se encontró un pago para ${descripcionBuscada}`);
+    await ddjjPage.close();
     return null;
   }
 
@@ -64,6 +65,8 @@ export async function obtainCmSopPayment(context: BrowserContext, page: Page): P
   const pdfPath = join(tmpdir(), `pago-cm-sop-${vep.nroVep}.pdf`);
 
   await writeFile(pdfPath, buffer);
+
+  await ddjjPage.close();
 
   return pdfPath;
 }

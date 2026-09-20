@@ -44,6 +44,7 @@ export async function obtainSwornStatement(context: BrowserContext, page: Page):
 
   if (matchedRowIndex === -1) {
     console.log('No se encontró una DDJJ mensual para el período buscado');
+    await ddjjPage.close();
     return null;
   }
 
@@ -54,6 +55,8 @@ export async function obtainSwornStatement(context: BrowserContext, page: Page):
   const download = await downloadPromise;
 
   const pdfPath = await download.path();
+
+  await ddjjPage.close();
 
   return pdfPath;
 }
