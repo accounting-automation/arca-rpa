@@ -64,7 +64,5 @@ export async function obtainMonotributoPayment(context: BrowserContext, page: Pa
 
   await writeFile(pdfPath, buffer);
 
-  console.log(pdfPath);
-
   return pdfPath;
 }

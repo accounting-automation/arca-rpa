@@ -3,7 +3,6 @@ import { basename, extname, join } from 'node:path';
 import { getCarpetaDestino } from './carpeta-destino.js';
 
 export async function printPdf(pdfPath: string, nombrePersona: string): Promise<void> {
-  console.log(`Imprimiendo PDF: ${pdfPath}`);
 
   const carpetaDestino = getCarpetaDestino(nombrePersona);
 

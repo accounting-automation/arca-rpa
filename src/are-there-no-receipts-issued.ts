@@ -9,17 +9,25 @@ export async function areThereNoReceiptsIssued(page: Page): Promise<boolean> {
     hasText: 'Mostrando 0 registros de un total de 0',
   });
 
-  try {
-    await Promise.all([
-      noExisteInformacion.waitFor({ state: 'visible' }),
-      infoSinRegistros.waitFor({ state: 'visible' }),
-    ]);
-  } catch {
-    return false;
+  const atLeastOneReceipt = page.locator('#tablaDataTables tbody tr[role="row"]').first();
+
+  const noReceipts = Promise.all([
+    noExisteInformacion.waitFor({ state: 'visible' }),
+    infoSinRegistros.waitFor({ state: 'visible' }),
+  ]).then(() => true as const);
+
+  const hasReceipts = atLeastOneReceipt.waitFor({ state: 'visible' }).then(() => false as const);
+
+  // evita "unhandled rejection" de la promesa que pierde la carrera
+  noReceipts.catch(() => {});
+  hasReceipts.catch(() => {});
+
+  const result = await Promise.race([noReceipts, hasReceipts]);
+
+  if (result) {
+    console.log(await noExisteInformacion.innerText());
+    console.log(await infoSinRegistros.innerText());
   }
 
-  console.log(await noExisteInformacion.innerText());
-  console.log(await infoSinRegistros.innerText());
-
-  return true;
+  return result;
 }

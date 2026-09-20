@@ -65,7 +65,5 @@ export async function obtainCmSopPayment(context: BrowserContext, page: Page): P
 
   await writeFile(pdfPath, buffer);
 
-  console.log(pdfPath);
-
   return pdfPath;
 }

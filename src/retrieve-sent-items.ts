@@ -31,8 +31,6 @@ export async function retrieveSentItems(context: BrowserContext, page: Page): Pr
 
   const pdfPath = await download.path();
 
-  console.log(pdfPath);
-
   await mySendPage.close();
 
   return pdfPath;

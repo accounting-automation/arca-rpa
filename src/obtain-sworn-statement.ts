@@ -55,7 +55,5 @@ export async function obtainSwornStatement(context: BrowserContext, page: Page):
 
   const pdfPath = await download.path();
 
-  console.log(pdfPath);
-
   return pdfPath;
 }

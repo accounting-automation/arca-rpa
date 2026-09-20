@@ -43,13 +43,9 @@ export async function obtainWithholdings(context: BrowserContext, page: Page): P
 
     await sifereInquiriesPage.getByRole('link', { name: 'Retenciones y coeficientes' }).click();
 
-    console.log(`Descargando PDF para el período ${periodo}`);
-
     const download = await downloadPromise;
 
     const pdfPath = await download.path();
-
-    console.log(pdfPath);
 
     return pdfPath;
 }

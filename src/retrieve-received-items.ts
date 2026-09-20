@@ -31,8 +31,6 @@ export async function retrieveReceivedItems(context: BrowserContext, page: Page)
 
   const pdfPath = await download.path();
 
-  console.log(pdfPath);
-
   await myReceiptsPage.close();
 
   return pdfPath;

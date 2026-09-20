@@ -15,12 +15,12 @@ export async function goToPageSifereDdjj(context: BrowserContext, page: Page, cu
     await ddjjPage.locator('input[value="Seleccionar"]').click();
     await ddjjPage.waitForLoadState('networkidle');
 
-    // La pantalla de confirmación tarda un instante en terminar de renderizar
-    // después de "Seleccionar" (el input readonly no está listo apenas
-    // termina networkidle); sin esta espera el paso siguiente da timeout.
-    await ddjjPage.waitForTimeout(1500);
-
+    // La pantalla de confirmación puede tardar en renderizar después de
+    // "Seleccionar" (networkidle no lo garantiza en este portal). En vez de
+    // dormir un tiempo fijo, esperamos la condición real con un timeout
+    // generoso, igual que en go-to-page-comarb-service.ts para este mismo sitio.
     const cuitConfirmInput = ddjjPage.locator('input[name="cuit"][readonly]');
+    await cuitConfirmInput.waitFor({ state: 'visible', timeout: 60000 });
     const cuitConfirmado = await cuitConfirmInput.inputValue();
 
     if (cuitConfirmado !== cuit) {

@@ -69,7 +69,5 @@ export async function obtainAcknowledgmentOfReceipt(context: BrowserContext, pag
 
   await writeFile(pdfPath, buffer);
 
-  console.log(pdfPath);
-
   return pdfPath;
 }
