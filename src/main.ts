@@ -50,7 +50,7 @@ async function main(username: string, password: string) {
 
   if (pdfPathSentItems) {
     console.log(`PDF de comprobantes emitidos descargado en: ${pdfPathSentItems}`);
-    await printPdf(pdfPathSentItems, nombre);
+    await printPdf(pdfPathSentItems, nombre, 'comprobantes-emitidos');
   } else {
     console.log('No se encontraron comprobantes emitidos');
   }
@@ -61,7 +61,7 @@ async function main(username: string, password: string) {
 
   if (pdfPathReceivedItems) {
     console.log(`PDF de comprobantes recibidos descargado en: ${pdfPathReceivedItems}`);
-    await printPdf(pdfPathReceivedItems, nombre);
+    await printPdf(pdfPathReceivedItems, nombre, 'comprobantes-recibidos');
   } else {
     console.log('No se encontraron comprobantes recibidos');
   }
@@ -72,7 +72,7 @@ async function main(username: string, password: string) {
 
   if (pdfWithholdingsPath) {
     console.log(`PDF de retenciones descargado en: ${pdfWithholdingsPath}`);
-    await printPdf(pdfWithholdingsPath, nombre);
+    await printPdf(pdfWithholdingsPath, nombre, 'retenciones');
   } else {
     console.log('No se encontraron retenciones');
   }
@@ -116,7 +116,7 @@ async function main(username: string, password: string) {
 
   if (pdfSwornStatementPath) {
     console.log(`PDF de declaración jurada descargado en: ${pdfSwornStatementPath}`);
-    await printPdf(pdfSwornStatementPath, nombre);
+    await printPdf(pdfSwornStatementPath, nombre, 'declaracion-jurada');
   } else {
     console.log('No se encontró la declaración jurada');
   }
