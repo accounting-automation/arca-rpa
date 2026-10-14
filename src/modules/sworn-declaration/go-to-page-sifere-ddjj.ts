@@ -15,22 +15,27 @@ export async function goToPageSifereDdjj(context: BrowserContext, page: Page, cu
     await ddjjPage.locator('input[value="Seleccionar"]').click();
     await ddjjPage.waitForLoadState('networkidle');
 
-    // La pantalla de confirmación puede tardar en renderizar después de
-    // "Seleccionar" (networkidle no lo garantiza en este portal). En vez de
-    // dormir un tiempo fijo, esperamos la condición real con un timeout
+    // Después de "Seleccionar", el portal a veces pide confirmar el CUIT y a
+    // veces va directo al inicio. networkidle no garantiza que renderice, así
+    // que esperamos la condición real (lo que aparezca primero) con un timeout
     // generoso, igual que en go-to-page-comarb-service.ts para este mismo sitio.
-    const cuitConfirmInput = ddjjPage.locator('input[name="cuit"][readonly]');
-    await cuitConfirmInput.waitFor({ state: 'visible', timeout: 60000 });
-    const cuitConfirmado = await cuitConfirmInput.inputValue();
+    const confirmButton = ddjjPage.locator('input[value="Si. Confirmar Ingreso al Sistema"]');
+    const listadoLink = ddjjPage.locator('#INICIO_listado_ddjj_mensuales');
 
-    if (cuitConfirmado !== cuit) {
-      throw new Error(`El CUIT a confirmar (${cuitConfirmado}) no coincide con el esperado (${cuit})`);
+    await confirmButton.or(listadoLink).waitFor({ state: 'visible', timeout: 60000 });
+
+    if (await confirmButton.isVisible()) {
+      const cuitConfirmado = await ddjjPage.locator('input[name="cuit"][readonly]').inputValue();
+
+      if (cuitConfirmado !== cuit) {
+        throw new Error(`El CUIT a confirmar (${cuitConfirmado}) no coincide con el esperado (${cuit})`);
+      }
+
+      await confirmButton.click();
+      await ddjjPage.waitForLoadState('networkidle');
     }
 
-    await ddjjPage.locator('input[value="Si. Confirmar Ingreso al Sistema"]').click();
-    await ddjjPage.waitForLoadState('networkidle');
-
-    await ddjjPage.locator('#INICIO_listado_ddjj_mensuales').click();
+    await listadoLink.click();
     await ddjjPage.waitForLoadState('networkidle');
 
     await ddjjPage.locator('#tableMensualDj tbody tr').first().waitFor({ state: 'visible' });
